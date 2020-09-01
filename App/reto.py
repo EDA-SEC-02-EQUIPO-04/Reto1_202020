@@ -484,8 +484,8 @@ def main():
         inputs = input('Seleccione una opción para continuar: \n')  # Leer opción ingresada.
         if len(inputs) > 0:
             if int(inputs[0]) == 1:  # Opción 1.
-                details_list, casting_list = load_csv_file('../Data/MoviesDetailsCleaned-small.csv',
-                                                           '../Data/MoviesCastingRaw-small.csv')  # Cargar datos.
+                details_list, casting_list = load_csv_file('../Data/MoviesDetailsCleaned-large.csv',
+                                                           '../Data/MoviesCastingRaw-large.csv')  # Cargar datos.
                 if len(details_list) == len(casting_list):
                     print('Datos cargados, ' + str(details_list['size']) + ' elementos cargados en listas')
                 else:
@@ -538,6 +538,7 @@ def main():
             elif int(inputs[0]) == 0:  # Opción 0, salir.
                 sys.exit(0)
         print('-' * 20)
+
 
 if __name__ == '__main__':
     main()
