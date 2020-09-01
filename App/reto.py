@@ -24,7 +24,7 @@
 
 """
   Este módulo es una aplicación básica con un menú de Opciónes para cargar datos, contar elementos,
-   y hacer búsquedas sobre una lista .
+   y hacer búsquedas sobre una lista.
 """
 
 import config as cf
@@ -38,7 +38,6 @@ from Sorting import shellsort as shell
 from Sorting import selectionsort as selection
 from Sorting import insertionsort as insertion
 from time import process_time
-from statistics import mean
 
 
 def print_menu():
@@ -47,15 +46,14 @@ def print_menu():
     """
     print('\nBienvenido')
     print('1- Cargar Datos')
-    print('2- Contar las películas de la Lista')
-    print('3- Contar películas de un director')
-    print('4- Consultar buenas películas de un director')
-    print('5- Ordenar películas por votos')
-    print('6- Conocer a un director y todas sus películas')
+    print('2- Consultar buenas películas de un director')
+    print('3- Ranking de películas')
+    print('4- Conocer a un director y todas sus películas')
+    print('5- Conocer a un actor y todas sus películas')
+    print('6- Entender un género cinematográfico')
     print('7- Ranking de un género cinematográfico')
-    print('8- Conocer a un actor y todas sus películas')
-    print('9- Entender género')
-
+    print('8- Contar las películas de la lista')
+    print('9- Contar películas de un director')
     print('0- Salir')
 
 
@@ -350,9 +348,6 @@ def sort_movies(algorithm, function, lst_d, column):
 
 
 def rank_movies(function, lst_d, req_elements, algorithm, column):
-    """
-    Retorna una lista con cierta cantidad de elementos ordenados por el criterio
-    """
     if len(lst_d) == 0:
         print('Las listas están vacías')
     else:
@@ -404,9 +399,6 @@ def get_average_count_points(movies):
 
 
 def rank_movies_on_genres(function, lst_d, req_elements, algorithm, column, genres):
-    """
-    Retorna una lista con cierta cantidad de elementos ordenados por el criterio
-    """
     if len(lst_d) == 0:
         print('Las listas están vacías')
     else:
@@ -488,43 +480,45 @@ def main():
     """
     details_list, casting_list = (lt.newList('ARRAY_LIST') for i in range(2))
     while True:
-        print_menu()  # imprimir el menu de opciones en consola
-        inputs = input('Seleccione una opción para continuar: \n')  # leer opción ingresada
+        print_menu()  # Imprimir el menu de opciones en consola.
+        inputs = input('Seleccione una opción para continuar: \n')  # Leer opción ingresada.
         if len(inputs) > 0:
-            if int(inputs[0]) == 1:  # Opción 1
+            if int(inputs[0]) == 1:  # Opción 1.
                 details_list, casting_list = load_csv_file('../Data/MoviesDetailsCleaned-small.csv',
-                                                           '../Data/MoviesCastingRaw-small.csv')  # Cargar datos
+                                                           '../Data/MoviesCastingRaw-small.csv')  # Cargar datos.
                 if len(details_list) == len(casting_list):
                     print('Datos cargados, ' + str(details_list['size']) + ' elementos cargados en listas')
                 else:
                     print('Datos cargados, aunque inconsistentes')
-            elif int(inputs[0]) == 2:  # Opción 2
-                if details_list['size'] == 0:  # obtener la longitud de la lista
-                    print('La lista esta vacía')
-                else:
-                    print('La lista tiene ' + str(details_list['size']) + ' elementos')
-            elif int(inputs[0]) == 3:  # Opción 3
-                director = input('Ingrese un director para consultar su cantidad de películas:\n')  # filtrar columna
-                counter_movies = count_director_movies(director, 'director_name', casting_list)
-                print('Coinciden', counter_movies, 'elementos con el director', director)
-            elif int(inputs[0]) == 4:  # Opción 4
+            elif int(inputs[0]) == 2:  # Opción 2.
                 director = input('Ingrese el nombre del director para conocer sus buenas películas:\n')
                 counter, average = find_good_movies(director, 6, details_list, casting_list)
                 print('Existen', counter, 'buenas películas del director', director, 'en el catálogo')
                 print('Las buenas películas de este director tienen un promedio de votación de', average, 'puntos.')
-            elif int(inputs[0]) == 5:  # Opción 5
+            elif int(inputs[0]) == 3:  # Opción 3.
                 print('Ranking de películas')
                 req = get_required_movies()
                 function = get_sorting_direction()  # Sorting direction.
                 column = get_vote_criteria()  # Column criteria for sorting.
                 algorithm = get_type_of_sorting()  # Type of sorting.
                 rank_movies(function, details_list, req, algorithm, column)  # Show results.
-            elif int(inputs[0]) == 6:  # Opción 6
+            elif int(inputs[0]) == 4:  # Opción 4.
                 director = input('Ingrese el nombre del director para conocer su trabajo:\n')
                 counter, average = know_director(director, details_list, casting_list)
                 print('Existen', counter, 'películas del director', director, 'en el catálogo')
                 print('Las películas de este director tienen un promedio de votación de', average, 'puntos.')
-            elif int(inputs[0]) == 7:  # Opción 7
+            elif int(inputs[0]) == 5:  # Opción 5.
+                actor = input('Ingrese el nombre del actor:\n')
+                counter, average, colaboracion = know_actor(actor, details_list, casting_list)
+                print('Existen', counter, 'películas del actor', actor, 'en el catálogo')
+                print('Las películas de este actor tienen un promedio de votación de', average, 'puntos.')
+                print('Con el director que más ha colaborado ha sido:', colaboracion)
+            elif int(inputs[0]) == 6:  # Opción 6.
+                genres = search_genres(details_list)  # Genres name to search.
+                counter, average = understand_genre(genres, details_list)
+                print('Existen', counter, 'películas de género', genres, 'en el catálogo')
+                print('Las películas de este género tienen un promedio de votación de', average, 'puntos.')
+            elif int(inputs[0]) == 7:  # Opción 7.
                 print('Ranking de películas en un género')
                 req = get_required_movies()
                 genres = search_genres(details_list)  # genres name to search.
@@ -532,20 +526,18 @@ def main():
                 function = get_sorting_direction()  # Sorting direction.
                 algorithm = get_type_of_sorting()  # Type of sorting.
                 rank_movies_on_genres(function, details_list, req, algorithm, column, genres)  # Show results.
-            elif int(inputs[0]) == 8:  # Opción 8
-                actor = input('Ingrese el nombre del actor:\n')
-                counter, average, colaboracion = know_actor(actor, details_list, casting_list)
-                print('Existen', counter, 'películas del actor', actor, 'en el catálogo')
-                print('Las películas de este actor tienen un promedio de votación de', average, 'puntos.')
-                print('Con el director que más ha colaborado ha sido:', colaboracion)
-            elif int(inputs[0]) == 9:  # Opción 0
-                genres = search_genres(details_list)  # genres name to search.
-                counter, average = understand_genre(genres, details_list)
-                print('Existen', counter, 'películas de género', genres, 'en el catálogo')
-                print('Las películas de este género tienen un promedio de votación de', average, 'puntos.')
-            elif int(inputs[0]) == 0:  # Opción 0, salir
+            elif int(inputs[0]) == 8:  # Opción 8.
+                if details_list['size'] == 0:  # Obtener la longitud de la lista.
+                    print('La lista esta vacía')
+                else:
+                    print('La lista tiene ' + str(details_list['size']) + ' elementos')
+            elif int(inputs[0]) == 9:  # Opción 9.
+                director = input('Ingrese un director para consultar su cantidad de películas: \n')  # Filtrar columna.
+                counter_movies = count_director_movies(director, 'director_name', casting_list)
+                print('Coinciden', counter_movies, 'elementos con el director', director)
+            elif int(inputs[0]) == 0:  # Opción 0, salir.
                 sys.exit(0)
-
+        print('-' * 20)
 
 if __name__ == '__main__':
     main()
