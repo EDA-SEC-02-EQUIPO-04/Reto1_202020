@@ -23,7 +23,7 @@
  """
 
 """
-  Este módulo es una aplicación básica con un menú de opciones para cargar datos, contar elementos,
+  Este módulo es una aplicación básica con un menú de Opciónes para cargar datos, contar elementos,
    y hacer búsquedas sobre una lista .
 """
 
@@ -43,7 +43,7 @@ from statistics import mean
 
 def print_menu():
     """
-    Imprime el menu de opciones
+    Imprime el menu de Opciónes
     """
     print('\nBienvenido')
     print('1- Cargar Datos')
@@ -54,7 +54,8 @@ def print_menu():
     print('6- Conocer a un director y todas sus películas')
     print('7- Ranking de un género cinematográfico')
     print('8- Conocer a un actor y todas sus películas')
-    
+    print('9- Entender género')
+
     print('0- Salir')
 
 
@@ -130,36 +131,39 @@ def get_director_movie_ids(search, result, director):
         if director.lower() in element['director_name'].lower():  # filtrar por nombre
             lt.addLast(result, element['id'])
 
+
 def get_actor_name_id(search, result, actor):
     iterator = it.newIterator(search)
     while it.hasNext(iterator):
         element = it.next(iterator)
         if actor.lower() in element['actor1_name'].lower():
-            lt.addLast(result,element['id'])
+            lt.addLast(result, element['id'])
         elif actor.lower() in element['actor2_name'].lower():
-            lt.addLast(result,element['id'])
+            lt.addLast(result, element['id'])
         elif actor.lower() in element['actor3_name'].lower():
-            lt.addLast(result,element['id'])
+            lt.addLast(result, element['id'])
         elif actor.lower() in element['actor4_name'].lower():
-            lt.addLast(result,element['id'])
+            lt.addLast(result, element['id'])
         elif actor.lower() in element['actor5_name'].lower():
-            lt.addLast(result,element['id'])
+            lt.addLast(result, element['id'])
+
 
 def get_actor_director(search, result, actor):
     iterator = it.newIterator(search)
     while it.hasNext(iterator):
         element = it.next(iterator)
         if actor.lower() in element['actor1_name'].lower():
-            lt.addLast(result,element['director_name'])
+            lt.addLast(result, element['director_name'])
         elif actor.lower() in element['actor2_name'].lower():
-            lt.addLast(result,element['director_name'])
+            lt.addLast(result, element['director_name'])
         elif actor.lower() in element['actor3_name'].lower():
-            lt.addLast(result,element['director_name'])
+            lt.addLast(result, element['director_name'])
         elif actor.lower() in element['actor4_name'].lower():
-            lt.addLast(result,element['director_name'])
+            lt.addLast(result, element['director_name'])
         elif actor.lower() in element['actor5_name'].lower():
-            lt.addLast(result,element['director_name'])
-       
+            lt.addLast(result, element['director_name'])
+
+
 def movies_total_average(movies):
     iterator = it.newIterator(movies)
     votes_sum = 0
@@ -202,9 +206,6 @@ def find_good_movies(director, vote_average, lst_d, lst_c):
 
 
 def know_director(director, lst_d, lst_c):
-    """
-    Retorna la cantidad de elementos que cumplen con un criterio para una columna dada
-    """
     if len(lst_d) == 0:
         print('Las listas están vacías')
         return 0, 0
@@ -213,7 +214,6 @@ def know_director(director, lst_d, lst_c):
         all_director_movies, movies_data = (lt.newList('ARRAY_LIST') for _ in range(2))
         # Search all director movie ids and add them to a list.
         get_director_movie_ids(lst_c, all_director_movies, director)
-       
         # Search movies and add vote points to list.
         iterator_ids = it.newIterator(all_director_movies)
         while it.hasNext(iterator_ids):
@@ -246,19 +246,21 @@ def show_movies(movies, director):
                   '\n   con un puntaje promedio de', element['vote_average'],
                   'y un total de', element['vote_count'], 'votaciones')
 
-def actor_movies(movies,actor):
+
+def actor_movies(movies, actor):
     if actor is not None:
         print('Las películas protagonizadas por', actor, 'son:')
         iterator = it.newIterator(movies)
         while it.hasNext(iterator):
             element = it.next(iterator)
-            print('-',element['title'])
+            print('-', element['title'])
     else:
         iterator = it.newIterator(movies)
         element = it.next(iterator)
-        print('-',element['title'] + ':',
-                    '\n con un puntaje promedio de', element['vote_average'],
-                    'y un total de', element['vote_count'], 'votaciones')
+        print('-', element['title'] + ':',
+              '\n con un puntaje promedio de', element['vote_average'],
+              'y un total de', element['vote_count'], 'votaciones')
+
 
 """
 def filtro_directores(lista_dct):
@@ -268,7 +270,8 @@ def filtro_directores(lista_dct):
             lista_directores.append(lista_dct['elements'][i])
     print(lista_directores)
     return lista_directores
-     """   
+     """
+
 
 def know_actor(actor, lst_movies, lst_casting):
     if len(lst_movies) == 0:
@@ -279,18 +282,16 @@ def know_actor(actor, lst_movies, lst_casting):
         peliculas_actor = lt.newList('ARRAY_LIST')
         movies_data = lt.newList('ARRAY_LIST')
         director = lt.newList('ARRAY_LIST')
-        get_actor_name_id(lst_casting,peliculas_actor,actor)
-        get_actor_director(lst_casting,director,actor)
+        get_actor_name_id(lst_casting, peliculas_actor, actor)
+        get_actor_director(lst_casting, director, actor)
         iterator_id = it.newIterator(peliculas_actor)
         while it.hasNext(iterator_id):
             movie_id = it.next(iterator_id)
             iterator_movies = it.newIterator(lst_movies)
             while it.hasNext(iterator_movies):
-                movie =it.next(iterator_movies)
+                movie = it.next(iterator_movies)
                 if movie_id == movie['id']:
-                    lt.addLast(movies_data,movie)
-        
-        
+                    lt.addLast(movies_data, movie)
         lista_directores = collections.Counter(director['elements']).most_common(1)
         director_colaboraciones = lista_directores[0][0]
         actor_movies(movies_data, actor)
@@ -365,30 +366,21 @@ def rank_movies(function, lst_d, req_elements, algorithm, column):
         print('Tiempo de ejecución ', t1_stop - t1_start, ' segundos')
 
 
-def understand_genre(genres, lst_d, movies): 
+def understand_genre(genres, lst_d):
     if len(lst_d) == 0:
         print('Las listas están vacías')
+        return 0, 0
     else:
-        t1_start = process_time()  # tiempo inicial
-        iterator_movies = it.newIterator(lst_d)
-        genres_movies = lt.newList('ARRAY_LIST')
-        count = 0
-        votes_sum = 0
-        for genre in genres:
-            while it.hasNext(iterator_movies):
-                movie = it.next(iterator_movies)
-                if genre.lower() in movie['genres'].lower():
-                    lt.addLast(genres_movies, movie)
-                    counter += 1
-                    while it.hasNext(iterator_movies):
-                        element = it.next(iterator_movies)
-                        votes_sum += float(element['vote_average'])
-                        total_vote_average = votes_sum / movies['size']
-        t1_stop = process_time()  # tiempo final
+        t1_start = process_time()  # Start time.
+        all_genres_movies = create_list_by_genres(lst_d, genres)
+        show_movies(all_genres_movies, None)
+        # Calculate number of movies and total vote average of genre.
+        total_vote_average = movies_total_average(all_genres_movies)
+        t1_stop = process_time()  # Final time.
         print('Tiempo de ejecución ', t1_stop - t1_start, ' segundos')
-        return(iterator_movies, counter, round(total_vote_average, 1))
+    return all_genres_movies['size'], total_vote_average
 
-      
+
 def create_list_by_genres(lst_d, genres):
     iterator_movies = it.newIterator(lst_d)
     genres_movies = lt.newList('ARRAY_LIST')
@@ -430,7 +422,7 @@ def rank_movies_on_genres(function, lst_d, req_elements, algorithm, column, genr
 
 
 def search_genres(lst_d):
-    genres = input('Ingrese el género a rankear. Si son varios, separe por comas: ')
+    genres = input('Ingrese el género. Si son varios, separe por comas: ')
     genres = genres.replace(' ', '')
     genres = genres.split(',')
     found = False
@@ -494,46 +486,45 @@ def main():
     Args: None
     Return: None
     """
-    details_list = lt.newList('ARRAY_LIST')
+    details_list, casting_list = (lt.newList('ARRAY_LIST') for i in range(2))
     while True:
         print_menu()  # imprimir el menu de opciones en consola
-        inputs = input('Seleccione una opción para continuar:\n')  # leer opción ingresada
+        inputs = input('Seleccione una opción para continuar: \n')  # leer opción ingresada
         if len(inputs) > 0:
-            if int(inputs[0]) == 1:  # opcion 1
-                details_list, casting_list = load_csv_file('Data/Peliculas/SmallMoviesDetailsCleaned.csv',
-                                                           'Data/Peliculas/MoviesCastingRaw-small.csv')  # Cargar datos
+            if int(inputs[0]) == 1:  # Opción 1
+                details_list, casting_list = load_csv_file('../Data/MoviesDetailsCleaned-small.csv',
+                                                           '../Data/MoviesCastingRaw-small.csv')  # Cargar datos
                 if len(details_list) == len(casting_list):
                     print('Datos cargados, ' + str(details_list['size']) + ' elementos cargados en listas')
                 else:
                     print('Datos cargados, aunque inconsistentes')
-            elif int(inputs[0]) == 2:  # opcion 2
+            elif int(inputs[0]) == 2:  # Opción 2
                 if details_list['size'] == 0:  # obtener la longitud de la lista
                     print('La lista esta vacía')
                 else:
                     print('La lista tiene ' + str(details_list['size']) + ' elementos')
-            elif int(inputs[0]) == 3:  # opcion 3
+            elif int(inputs[0]) == 3:  # Opción 3
                 director = input('Ingrese un director para consultar su cantidad de películas:\n')  # filtrar columna
                 counter_movies = count_director_movies(director, 'director_name', casting_list)
                 print('Coinciden', counter_movies, 'elementos con el director', director)
-            elif int(inputs[0]) == 4:  # opcion 4
+            elif int(inputs[0]) == 4:  # Opción 4
                 director = input('Ingrese el nombre del director para conocer sus buenas películas:\n')
                 counter, average = find_good_movies(director, 6, details_list, casting_list)
                 print('Existen', counter, 'buenas películas del director', director, 'en el catálogo')
                 print('Las buenas películas de este director tienen un promedio de votación de', average, 'puntos.')
-            elif int(inputs[0]) == 5:  # opcion 5
+            elif int(inputs[0]) == 5:  # Opción 5
                 print('Ranking de películas')
                 req = get_required_movies()
                 function = get_sorting_direction()  # Sorting direction.
                 column = get_vote_criteria()  # Column criteria for sorting.
                 algorithm = get_type_of_sorting()  # Type of sorting.
                 rank_movies(function, details_list, req, algorithm, column)  # Show results.
-            elif int(inputs[0]) == 6:  # opcion 6
+            elif int(inputs[0]) == 6:  # Opción 6
                 director = input('Ingrese el nombre del director para conocer su trabajo:\n')
                 counter, average = know_director(director, details_list, casting_list)
                 print('Existen', counter, 'películas del director', director, 'en el catálogo')
                 print('Las películas de este director tienen un promedio de votación de', average, 'puntos.')
-
-            elif int(inputs[0]) == 7:  # opcion 7
+            elif int(inputs[0]) == 7:  # Opción 7
                 print('Ranking de películas en un género')
                 req = get_required_movies()
                 genres = search_genres(details_list)  # genres name to search.
@@ -541,14 +532,18 @@ def main():
                 function = get_sorting_direction()  # Sorting direction.
                 algorithm = get_type_of_sorting()  # Type of sorting.
                 rank_movies_on_genres(function, details_list, req, algorithm, column, genres)  # Show results.
-            elif int(inputs[0]) == 8: # Opción 7 
+            elif int(inputs[0]) == 8:  # Opción 8
                 actor = input('Ingrese el nombre del actor:\n')
                 counter, average, colaboracion = know_actor(actor, details_list, casting_list)
                 print('Existen', counter, 'películas del actor', actor, 'en el catálogo')
                 print('Las películas de este actor tienen un promedio de votación de', average, 'puntos.')
-                print('Con el director que más ha colaborado ha sido:',colaboracion)
-
-            elif int(inputs[0]) == 0:  # opcion 0, salir
+                print('Con el director que más ha colaborado ha sido:', colaboracion)
+            elif int(inputs[0]) == 9:  # Opción 0
+                genres = search_genres(details_list)  # genres name to search.
+                counter, average = understand_genre(genres, details_list)
+                print('Existen', counter, 'películas de género', genres, 'en el catálogo')
+                print('Las películas de este género tienen un promedio de votación de', average, 'puntos.')
+            elif int(inputs[0]) == 0:  # Opción 0, salir
                 sys.exit(0)
 
 
